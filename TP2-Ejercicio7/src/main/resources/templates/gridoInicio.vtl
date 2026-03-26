@@ -1,0 +1,34 @@
+<HTML>    <HEAD>
+      <TITLE>CLUB GRIDO</TITLE>    </HEAD>
+    <BODY>
+
+<form action='/getProductosClubGrido' method='get'>
+  <div class="form-group">
+    <label for="puntos">Ingrese su cantidad de puntos: </label>
+    <input id="puntos" name="puntos" class="form-control" type="number"><br><br>
+  </div>
+  <button type="submit" formaction="/ProductosCanjeables">Buscar productos</button>
+  <button type="submit" formaction="/ClubGrido">Todos los productos</button><br><br>
+
+</form>
+
+<CENTER>
+      <B>Tabla de Canjes CLUBGRIDO</B>
+      <BR/>  <BR/> 
+      <TABLE>
+            <TR>
+                <TH>Producto</TH>
+                <TH></TH>
+                <TH>Puntos</TH>
+            </TR>
+            #foreach($p in $listaProductos)          
+            <TR>
+                <TD> $p.producto </TD>
+                <TD></TD>
+                <TD> $p.puntos </TD>
+            </TR>
+            #end
+      </TABLE
+      </CENTER>  
+    </BODY>  
+</HTML>

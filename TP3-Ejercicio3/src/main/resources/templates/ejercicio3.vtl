@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+    <TITLE>NETFLIX</TITLE>
+</HEAD>
+<BODY>
+
+<table>
+    <tr>
+        <!-- Columna izquierda: Formulario -->
+        <td style="vertical-align: top; padding-right: 80px;">
+            <form action='/api/inicio' method='get'>
+                <b>1° consulta: Buscar peliculas por director</b><br><br>
+                <div class="form-group">
+                    <label for="director">Director:</label>
+                    <select id="director" name="director" class="form-control">
+                        <option value="" disabled selected>Seleccione director</option>
+                        #foreach($d in $directores)
+                            <option value="$d.nombre">$d.nombre</option>
+                        #end
+                    </select>
+                    <br><br>
+                </div>
+                <button type="submit" formaction="/api/pelicula/dirigidasPor">Obtener PELICULAS</button><br><br>
+                <b>2° consulta: Buscar peliculas por actor</b><br><br>
+                <div class="form-group">
+                    <label for="actor">Director:</label>
+                    <select id="actor" name="actor" class="form-control">
+                        <option value="" disabled selected>Seleccione actor</option>
+                        #foreach($a in $actores)
+                            <option value="$a.nombre">$a.nombre</option>
+                        #end
+                    </select>
+                    <br><br>
+                </div>
+                <button type="submit" formaction="/api/pelicula/actuadasPor">Obtener PELICULAS</button><br><br>
+                <b>3° consulta: Buscar nacionalidad de actores por director de pelicula</b><br><br>
+                <div class="form-group">
+                    <label for="dir">Director:</label>
+                    <select id="dir" name="dir" class="form-control">
+                        <option value="" disabled selected>Seleccione director</option>
+                        #foreach($d in $directores)
+                            <option value="$d.nombre">$d.nombre</option>
+                        #end
+                    </select>
+                    <br><br>
+                </div>
+            </form>
+                <button type="submit" formaction="/api/actor/nacionalidad/PeliculasDirigidasPor">Obtener NACIONALIDAD</button><br><br>
+            <form action="/api/pelicula/regristroVisualizacion" method="post">    
+                <b>4° consulta: Agregar visualizacion de Pelicula</b><br><br>
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <select id="usuario" name="usuario" class="form-control">
+                        <option value="" disabled selected>Seleccione usuario</option>
+                        #foreach($a in $usuarios)
+                            <option value="$a.nombre">$a.nombre</option>
+                        #end
+                    </select>
+                    <br><br>
+                <label for="pelicula">Pelicula:</label>
+                    <select id="pelicula" name="pelicula" class="form-control">
+                        <option value="" disabled selected>Seleccione pelicula</option>
+                        #foreach($p in $peliculas)
+                            <option value="$p.titulo">$p.titulo</option>
+                        #end
+                    </select>
+                    <br><br>
+                </div>
+                <button type='submit' formaction="/api/pelicula/regristroVisualizacion">Agregar VISUALIZACION</button><br><br>
+            </form>
+            <form action='/api/pelicula/recomendacionPorNacionMasVisualizada' method='get'>
+                <b>5° consulta: Obtener Recomendaciones</b><br><br>
+                <div class="form-group">
+                    <label for="user">Usuario:</label>
+                    <select id="user" name="user" class="form-control">
+                        <option value="" disabled selected>Seleccione usuario</option>
+                        #foreach($a in $usuarios)
+                            <option value="$a.nombre">$a.nombre</option>
+                        #end
+                    </select>
+                    <br><br>
+                </div>
+                <button type="submit" formaction="/api/pelicula/recomendacionPorNacionMasVisualizada">Obtener RECOMENDACION por Nacion</button><br><br>
+                <button type="submit" formaction="/api/pelicula/recomendacionPorDirectorMasVisualizado">Obtener RECOMENDACION por Director</button><br><br>
+            </form>
+        </td>
+
+        <!-- Columna derecha: Información -->
+        <td style="vertical-align: top;">
+            <b>$accion</b><br><br>
+            #if($numero == 1 || $numero == 2 || $numero == 4)
+            <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Año</th>
+                    <th>Nación</th>
+                    <th>Idioma</th>
+                    <th>Color</th>
+                    <th>Resumen</th>
+                </tr>
+            </thead>
+            <tbody>
+                    #foreach($a in $lista)
+                    <tr>
+                        <td>$a.titulo</td>
+                        <td>$a.anio</td>
+                        <td>$a.nacion</td>
+                        <td>$a.idioma</td>
+                        <td>#if($a.color)A color#{else}Blanco y negro#end</td>
+                        <td>$a.resumen</td>
+                    </tr>
+                    #end
+            </tbody>
+            </table>
+            #elseif($numero == 3)
+            <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nacionalidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                    #foreach($a in $lista)
+                    <tr>
+                        <td>$a.nombre</td>
+                        <td>$a.nacion</td>
+                    </tr>
+                    #end
+            </tbody>
+            </table>
+            #end
+        </td>
+    </tr>
+</table>
+
+</BODY>
+</HTML>
+

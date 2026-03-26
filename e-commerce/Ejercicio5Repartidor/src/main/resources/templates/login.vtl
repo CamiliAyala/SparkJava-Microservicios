@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PEDIDOS NOW - Ingreso</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f3f3f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        background: white;
+        padding: 2rem 2.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #1e90ff; /* Azul fuerte */
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-weight: bold;
+    }
+
+    select, input[type="password"] {
+        width: 100%;
+        padding: 0.4rem;
+        border: 1px solid #add8e6; /* Azul celeste claro */
+        border-radius: 5px;
+    }
+
+    button {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: #1e90ff; /* Azul fuerte */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    button:hover {
+        background-color: #4682b4; /* Azul acero */
+    }
+</style>
+
+</head>
+<body>
+    <div class="login-container">
+    <form action="/api/login" method="post">
+        <h2>Pedidos Now</h2>
+
+        <div class="form-group">
+            <label for="usuario">Usuario:</label>
+            <select name="usuario" id="usuario" required>
+                <option value="" disabled selected>Seleccione usuario</option>
+                #foreach($u in $usuarios)
+                   <option value="$u.user_repartidor">$u.user_repartidor</option>
+                #end
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" name="contraseña" id="contraseña" required>
+        </div>
+
+        <button type="submit" formaction="/api/procesarLogin">Ingresar</button>
+    </form>
+</div>
+#if($error)
+    <p style="color:red;">$error</p>
+#end
+</body>
+</html>
+
+</BODY>
+</HTML>

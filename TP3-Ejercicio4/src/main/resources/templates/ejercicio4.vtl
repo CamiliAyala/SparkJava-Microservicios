@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PLATAFORMA 10 - CONSULTA DE VIAJES</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 60%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select, input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #000;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>CONSULTA DE VIAJES</h2>
+
+    <form action='/api/inicio' method='get'>
+        <div class="form-group">
+            <label for="origen">Ciudad de Origen:</label>
+            <select name="origen" id="origen" required>
+                <option value="" disabled selected>Seleccione origen</option>
+                #foreach($ciudad in $ciudadesOrigen)
+                    <option value="$ciudad">$ciudad</option>
+                #end
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="destino">Ciudad de Destino:</label>
+            <select name="destino" id="destino" required>
+                <option value="" disabled selected>Seleccione destino</option>
+                #foreach($ciudad in $ciudadesDestino)
+                    <option value="$ciudad">$ciudad</option>
+                #end
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="partida">Fecha de Partida:</label>
+            <input id="partida" name="partida" type="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="regreso">Fecha de Regreso (opcional):</label>
+            <input id="regreso" name="regreso" type="date">
+        </div>
+
+        <button formaction="/api/viajes/busqueda" type="submit">Buscar VIAJES</button>
+    </form>
+#if($accion == 1 || $accion == 2)
+   <div class="table-container">
+    <b>VIAJES DE IDA</b>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Partida</th>
+                    <th>Hora de Salida</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if($viajes.size() > 0)
+                    #foreach($v in $viajes)
+                    <tr>
+                        <td>$v.empresa</td>
+                        <td>$v.origen</td>
+                        <td>$v.destino</td>
+                        <td>$v.partida</td>
+                        <td>$v.hora_salida</td>
+                        <td>$v.precio</td>
+                    </tr>
+                    #end
+                #else
+                    <tr><td colspan="7">No se encontraron viajes.</td></tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+#end
+#if($accion == 2)
+<div class="table-container">
+        <b>VIAJES DE REGRESO</b>
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Partida</th>
+                    <th>Hora de Salida</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if($viajesOpc.size() > 0)
+                    #foreach($v in $viajesOpc)
+                    <tr>
+                        <td>$v.empresa</td>
+                        <td>$v.origen</td>
+                        <td>$v.destino</td>
+                        <td>$v.partida</td>
+                        <td>$v.hora_salida</td>
+                        <td>$v.precio</td>
+                    </tr>
+                    #end
+                #else
+                    <tr><td colspan="7">No se encontraron viajes.</td></tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+#end
+
+</body>
+</html>
+
+
+

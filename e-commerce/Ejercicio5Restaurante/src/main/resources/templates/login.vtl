@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PEDIDOS NOW - Ingreso</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #fdfdfd; /* fondo blanco muy claro */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .login-container {
+        background: #ffffff;
+        padding: 2rem 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(193, 18, 31, 0.15); /* sombra rojiza suave */
+        width: 320px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #c1121f; /* rojo fuerte */
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-weight: bold;
+        color: #9d0208; /* rojo más oscuro */
+    }
+
+    select, input[type="password"] {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #f5c2c7; /* borde rojo clarito */
+        border-radius: 8px;
+        background-color: #fffafa; /* blanco ligeramente rosado */
+    }
+
+    select:focus, input[type="password"]:focus {
+        border-color: #c1121f;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 0.6rem;
+        background-color: #c1121f; /* rojo fuerte */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #9d0208; /* rojo más oscuro al pasar mouse */
+    }
+</style>
+
+</head>
+<body>
+    <div class="login-container">
+        <form action="/api/procesarLogin" method="post">
+            <h2>Pedidos Now</h2>
+            <div class="form-group">
+                <label for="usuario">Restaurante:</label>
+                <select name="usuario" id="usuario" required>
+                    <option value="" disabled selected>Seleccione restaurante</option>
+                    #foreach($u in $restaurantes)
+                       <option value="$u.nombre">$u.nombre</option>
+                    #end
+                </select>
+            </div>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+</body>
+</html>

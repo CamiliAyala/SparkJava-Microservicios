@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos Now - Menú Principal</title>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Pedidos Now</h1>
+    <div class="menu">
+        <a href="/api/inicio">Inicio</a>
+        <a href="/api/restaurantes">Restaurantes</a>
+        <a href="/api/verCarrito">Mi Carrito</a>
+        <a href="/api/detallesPedido">Mis Pedidos</a>
+        <a href="/logout">Salir</a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="card">
+        <h2>¡Bienvenido/a $user!</h2>
+        #if($accion == "inicio")
+        <p>Selecciona una opción del menú para comenzar a utilizar la plataforma.</p>
+        #end
+    </div>
+    #if($accion == "getRestaurantes")
+        <div class="restaurantes-container">
+            <h3>Restaurantes Disponibles</h3>
+            <div class="restaurantes-list">
+                #foreach($restaurante in $restaurantes)
+                    <div class="restaurante-card">
+                        <h4>${restaurante.nombre}</h4>
+                        <p><strong>Dirección:</strong> ${restaurante.direccion}</p>
+                        <p><strong>Categoría:</strong> ${restaurante.categoria}</p>
+                        <a href="/restaurante/${restaurante.nombre}" class="btn-ver">Ver Más</a>
+                    </div>
+                #end
+            </div>
+        </div>
+    #end
+    #if($accion == "getMenu")
+    <div class="menu-container">
+        <h3>Platos del Menú</h3>
+        <div class="menu-list">
+            #foreach($item in $menu)
+                <div class="menu-card">
+                    <h4>$item.nombre_plato</h4>
+                    <p><strong>Precio:</strong> $ $item.precio</p>
+                    <form action="/api/agregarAlCarrito" method="post">
+                        <input type="hidden" name="menu_id" value="$item.id"/>
+                        <input type="hidden" name="precio" value="$item.precio"/>
+                        <input type="hidden" name="user" value="$user"/>
+                        <label for="cantidad"><strong>Cantidad:</strong></label>
+                        <input type="number" id="cantidad" name="cantidad" value="1" min="1" required style="width: 60px; margin: 5px 0;"/>
+                        <button type="submit" class="btn-ver">Agregar al carrito 🛒</button>
+                    </form>
+                </div>
+            #end
+        </div>
+    </div>
+    #end
+    #if($accion == "agregadoACarrito")
+    <div class="carrito-buttons" style="margin-top: 20px; text-align: center;">
+        <form action="/api/restaurantes" method="get" style="display: inline;">
+            <button type="submit" class="btn-volver">⬅️ Volver</button>
+        </form>
+
+        <form action="/api/verCarrito" method="get" style="display: inline; margin-left: 10px;">
+            <button type="submit" class="btn-ver"> Ver Carrito 🛒</button>
+        </form>
+    </div>
+    #end
+    #if($accion == "getCarrito")
+    <div class="carrito-container">
+        <h3>🛒 Carrito de Compras</h3>
+        #if($carritoItems.size() > 0)
+            <table class="carrito-tabla">
+                <thead>
+                    <tr>
+                        <th>Pedidos</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #set($i = 0)
+                    #set($totalGeneral = 0)
+                    #foreach($item in $carritoItems)
+                        #set($subtotal = $item.cantidad * $item.precio_unitario)
+                        #set($totalGeneral = $totalGeneral + $subtotal)
+                        <tr>
+                            <td>$nombres.get($i)</td>
+                            <td>$item.cantidad</td>
+                            <td>$item.precio_unitario</td>
+                            <td>$subtotal</td>
+                        </tr>
+                        #set($i = $i + 1)
+                    #end
+                    <tr>
+                        <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                        <td><strong>$totalGeneral</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        #else
+            <p>Tu carrito está vacío.</p>
+        #end
+        </div>
+        <div style="margin-top: 20px;">
+            <form action="/api/restaurantes" method="get" style="display: inline;">
+                <button type="submit" class="btn-volver">⬅️ Volver</button>
+            </form>
+            #if($carritoItems.size() > 0)
+            <form action="/api/confirmarPedido" method="post" style="display: inline; margin-left: 10px;">
+                <button type="submit" class="btn-ver">✅ Confirmar Pedido</button>
+            </form>
+            #end
+        </div>
+    </div>
+    #end
+    #if($accion == "confirmarPedido")
+        <div style="background-color: #d4edda; color: #155724; padding: 1rem; border: 1px solid #c3e6cb; border-radius: 5px; margin: 1rem 0; text-align: center;">
+            <p style="font-weight: bold; font-size: 1.1rem;">✅ ¡Su pedido ha sido confirmado con éxito!</p>
+            <form action="/api/detallesPedido" method="get">
+                <button type="submit" style="margin-top: 10px; background-color: #28a745; color: white; padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer;">
+                    Ver detalles de seguimiento 📦
+                </button>
+            </form>
+        </div>
+    #end   
+    #if($accion == "detallesPedido")
+        #if($pedido)
+            <div style="background-color: #e3f2fd; color: #0d47a1; padding: 1rem; border: 1px solid #90caf9; border-radius: 6px; margin: 1rem 0;">
+                <h3 style="margin-top: 0;">📦 Detalles del Pedido</h3>
+                <p><strong>Estado del pedido:</strong> $pedido.user_estado</p>
+                <p><strong>Restaurante:</strong> $pedido.restaurante_estado</p>
+                #if(!$pedido.repartidor_nombre)
+                    <p><strong>Repartidor:</strong> En proceso de selección...</p>
+                #else
+                    <p><strong>Repartidor asignado:</strong> $pedido.repartidor_nombre</p>
+                #end
+            </div>
+        #else 
+            <div style="background-color: #fff3cd; color: #856404; padding: 1rem; border: 1px solid #ffeeba; border-radius: 6px; margin: 1rem 0;">
+                <h3 style="margin: 0;">⚠️ No has realizado pedidos por el momento.</h3>
+                <p>Cuando realices un pedido, verás aquí los detalles de seguimiento.</p>
+            </div>
+        #end
+    #end
+</div>
+
+</body>
+
+<style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fafafa;
+        }
+
+        .navbar {
+            background-color: #db4483;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .menu a:hover {
+            color: #ffe0b2;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+         .restaurantes-container {
+        margin-top: 2rem;
+        text-align: center;
+        }
+
+        .restaurantes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .restaurante-card {
+            background-color: white;
+            padding: 1.5rem;
+            width: 280px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .restaurante-card h4 {
+            margin: 0 0 0.5rem;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .restaurante-card p {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .menu-container {
+            margin-top: 2rem;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .menu-card {
+            background-color: #fff8f4;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .menu-card h4 {
+            margin-top: 0;
+            color: #db4483;
+        }
+
+        .btn-volver, .btn-ver, .btn-ver {
+            background-color: #db4483;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .btn-volver:hover, .btn-ver:hover, .btn-ver:hover {
+            background-color: #eb106b;
+        }
+        .carrito-tabla {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .carrito-tabla th, .carrito-tabla td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .carrito-tabla th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+</style>
